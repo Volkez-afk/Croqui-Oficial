@@ -3,139 +3,47 @@
 <head>
 <meta charset="UTF-8">
 <title>Login Servidor | Prefeitura Botucatu</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-body {
-    background: linear-gradient(135deg, #0b3c5d, #1e6cb0);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    padding: 20px;
-}
-
-.login-container {
-    background: white;
-    padding: 40px;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    width: 100%;
-    max-width: 400px;
-}
-
-h2 {
-    color: #0b3c5d;
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 24px;
-}
-
-.input-group { margin-bottom: 20px; }
-
-label {
-    display: block;
-    margin-bottom: 8px;
-    color: #333;
-    font-weight: bold;
-}
-
-input {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 16px;
-}
-
-button {
-    width: 100%;
-    padding: 14px;
-    background: #0b3c5d;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    cursor: pointer;
-    margin-top: 10px;
-}
-
-.error {
-    color: #d32f2f;
-    text-align: center;
-    margin-top: 15px;
-    padding: 10px;
-    background: #ffebee;
-    border-radius: 6px;
-    display: none;
-}
-
-.voltar-link {
-    text-align: center;
-    margin-top: 20px;
-}
-</style>
-</head>
-<body>
-
-<div class="login-container">
-    <h2>Login do Servidor</h2>
-
-    <div class="input-group">
-        <label>RI</label>
-        <input type="text" id="ri">
-    </div>
-
-    <div class="input-group">
-        <label>Senha</label>
-        <input type="password" id="senha">
-    </div>
-
-    <div class="error" id="errorMsg">RI ou senha incorretos</div>
-
-    <button onclick="fazerLogin()">Entrar</button>
-
-    <div class="voltar-link">
-        <a href="index.html">← Voltar</a>
-    </div>
-</div>
-
-<!-- SUPABASE -->
+<link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase.js"></script>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Login do Servidor</h1>
+
+    <label>RI</label>
+    <input type="text" id="ri">
+
+    <label>Senha</label>
+    <input type="password" id="senha">
+
+    <button onclick="loginServidor()">Entrar</button>
+</div>
 
 <script>
-async function fazerLogin() {
-
-    const ri = document.getElementById('ri').value.trim();
-    const senha = document.getElementById('senha').value;
+async function loginServidor(){
+    const ri = document.getElementById("ri").value;
+    const senha = document.getElementById("senha").value;
 
     const { data, error } = await supabase
-        .from('servidores')
-        .select('*')
-        .eq('ri', ri)
-        .eq('senha', senha)
+        .from("servidores")
+        .select("*")
+        .eq("ri", ri)
+        .eq("senha", senha)
         .single();
 
-    if (data) {
-
-        sessionStorage.setItem('servidorLogado', JSON.stringify(data));
-        window.location.href = 'servidor.html';
-
-    } else {
-        document.getElementById('errorMsg').style.display = 'block';
+    if(error || !data){
+        alert("Servidor não autorizado");
+        return;
     }
-}
 
-document.addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') fazerLogin();
-});
+    sessionStorage.setItem("servidorLogado", JSON.stringify(data));
+    window.location.href = "servidor.html";
+}
 </script>
 
 </body>
