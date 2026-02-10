@@ -314,33 +314,25 @@ function gerarNumeroSolicitacao() {
     return `${totalSolicitacoes}/${ano}`;
 }
 
-function enviarSolicitacao() {
-    const tipo = document.querySelector('input[name="tipoCroqui"]:checked').value;
-    const tipoNome = tipo === 'oficial' ? 'Croqui Oficial' : 'Croqui para Localização';
-    
-    const solicitacao = {
-        id: Date.now(),
-        numero: gerarNumeroSolicitacao(),
-        tipo: tipoNome,
-        nome: document.getElementById('nomeCompleto').value || "Não informado",
-        cpf: document.getElementById('cpf').value,
-        iptu: document.getElementById('iptu').value,
-        endereco: document.getElementById('logradouro').value,
-        numeroImovel: document.getElementById('numero').value,
-        bairro: document.getElementById('bairro').value,
-        quadra: document.getElementById('quadra').value,
-        lote: document.getElementById('lote').value,
-        data: new Date().toISOString(),
-        status: 'pendente',
-        servidor: null,
-        resultado: null,
-        motivo: null
-    };
-    
-    // Salvar no localStorage
-    const solicitacoes = JSON.parse(localStorage.getItem('solicitacoes'));
-    solicitacoes.push(solicitacao);
-    localStorage.setItem('solicitacoes', JSON.stringify(solicitacoes));
+async function enviarSolicitacao(formData, arquivo) {
+
+    const nomeArquivo = Date.now() + "_" + arquivo.name;
+
+    await supabase.storage
+        .from('croquis')
+        .upload(nomeArquivo, arquivo);
+
+    await supabase.from('solicitacoes').insert([{
+        nome: formData.nome,
+        email: formData.email,
+        lote: formData.lote,
+        arquivo: nomeArquivo,
+        status: "pendente"
+    }]);
+
+    alert("Solicitação enviada com sucesso!");
+}
+
     
     // Gerar número aleatório para demonstração
     const numeroDemonstracao = Math.floor(Math.random() * 100) + 1;
