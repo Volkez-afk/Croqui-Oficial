@@ -17,25 +17,53 @@
 
 <button onclick="enviar()">Enviar</button>
 
-<script>
+<script type="module">
+import { supabase } from './supabase.js'
 
-async function enviar(){
+window.mostrarCampos = function() {
+    const tipo = document.querySelector('input[name="tipoCroqui"]:checked');
+    const botao = document.getElementById("btnEnviar");
 
-const {data:{user}}=await db.auth.getUser()
+    if (!tipo) {
+        botao.disabled = true;
+        return;
+    }
 
-const nome=document.getElementById('nome').value
-const cpf=document.getElementById('cpf').value
-const endereco=document.getElementById('endereco').value
-
-await db.from('solicitacoes').insert([
-{usuario:user.id,nome,cpf,endereco,status:'pendente'}
-])
-
-alert("Solicitação enviada")
-
+    botao.disabled = false;
+    document.getElementById("dadosImovel").classList.remove("hidden");
+    
+    if (tipo.value === "oficial") {
+        document.getElementById("croquiOficial").classList.remove("hidden");
+    } else {
+        document.getElementById("croquiOficial").classList.add("hidden");
+    }
 }
 
-</script>
+window.enviarSolicitacao = async function(){
 
-</body>
-</html>
+    const { data: user } = await supabase.auth.getUser()
+
+    const solicitacao = {
+        usuario_id: user.user.id,
+        tipo: document.querySelector('input[name="tipoCroqui"]:checked').value,
+        nome: document.getElementById('nomeCompleto').value,
+        cpf: document.getElementById('cpf').value,
+        iptu: document.getElementById('iptu').value,
+        endereco: document.getElementById('logradouro').value,
+        numero: document.getElementById('numero').value,
+        bairro: document.getElementById('bairro').value,
+        quadra: document.getElementById('quadra').value,
+        lote: document.getElementById('lote').value,
+        status: 'pendente'
+    }
+
+    const {error} = await supabase.from('solicitacoes').insert([solicitacao])
+
+    if(error){
+        alert(error.message)
+    }else{
+        alert("Solicitação enviada com sucesso!")
+        window.location.href="index.html"
+    }
+}
+</script>
