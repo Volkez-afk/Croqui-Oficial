@@ -649,5 +649,44 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+<script>
+const SUPABASE_URL = "https://SEU_URL.supabase.co";
+const SUPABASE_KEY = "SUA_ANON_KEY";
+
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+async function carregarSolicitacoes() {
+    const { data, error } = await supabase
+        .from('solicitacoes')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        console.error(error);
+        return;
+    }
+
+    const tabela = document.getElementById("tabelaSolicitacoes");
+    if (!tabela) return;
+
+    tabela.innerHTML = "";
+
+    data.forEach(s => {
+        tabela.innerHTML += `
+        <tr>
+            <td>${s.nome}</td>
+            <td>${s.email}</td>
+            <td>${s.status}</td>
+            <td><a href="${s.pdf_url}" target="_blank">Abrir PDF</a></td>
+        </tr>`;
+    });
+}
+
+window.onload = carregarSolicitacoes;
+</script>
+
 </body>
+
 </html>
