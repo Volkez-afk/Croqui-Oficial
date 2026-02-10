@@ -590,21 +590,15 @@ function mostrarDetalhes(solicitacao) {
     }
 }
 
-function aceitarSolicitacao() {
-    if (!solicitacaoSelecionada) return;
-    
-    const todasSolicitacoes = JSON.parse(localStorage.getItem('solicitacoes'));
-    const index = todasSolicitacoes.findIndex(s => s.id === solicitacaoSelecionada.id);
-    
-    if (index !== -1) {
-        todasSolicitacoes[index].status = 'em_analise';
-        todasSolicitacoes[index].servidor = servidorLogado.ri;
-        localStorage.setItem('solicitacoes', JSON.stringify(todasSolicitacoes));
-        
-        alert(`Solicitação ${solicitacaoSelecionada.numero} aceita para análise!`);
-        abrirAba('analise', document.querySelector('.menu-item:nth-child(2)'));
-    }
-}
+await supabase
+    .from('solicitacoes')
+    .update({
+        status: 'em_analise',
+        servidor_id: servidorLogado.id
+    })
+    .eq('id', solicitacaoSelecionada.id);
+
+carregarSolicitacoes();
 
 function mostrarOpcao(tipo) {
     document.getElementById('opcoesFinalizacao').classList.add('hidden');
