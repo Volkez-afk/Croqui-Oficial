@@ -386,10 +386,36 @@ document.addEventListener('DOMContentLoaded', function() {
     carregarSolicitacoes();
 });
 
-function carregarSolicitacoes() {
-    const todasSolicitacoes = JSON.parse(localStorage.getItem('solicitacoes') || '[]');
-    renderizarLista(todasSolicitacoes);
+async function carregarSolicitacoes() {
+
+    const { data } = await supabase
+        .from('solicitacoes')
+        .select('*')
+        .order('id', { ascending:false });
+
+    const tabela = document.getElementById("listaSolicitacoes");
+    tabela.innerHTML = "";
+
+    data.forEach(s => {
+
+        const url = supabase.storage
+            .from('croquis')
+            .getPublicUrl(s.arquivo).data.publicUrl;
+
+        tabela.innerHTML += `
+            <tr>
+                <td>${s.nome}</td>
+                <td>${s.lote}</td>
+                <td>
+                    <a href="${url}" target="_blank">Ver PDF</a>
+                </td>
+                <td>${s.status}</td>
+            </tr>
+        `;
+    });
 }
+
+carregarSolicitacoes();
 
 function renderizarLista(solicitacoes) {
     const listaContainer = document.getElementById('listaSolicitacoes');
