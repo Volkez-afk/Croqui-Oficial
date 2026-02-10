@@ -291,38 +291,25 @@ if (!localStorage.getItem('servidores')) {
     localStorage.setItem('servidores', JSON.stringify(servidoresPadrao));
 }
 
-function fazerLogin() {
+async function fazerLogin() {
     const ri = document.getElementById('ri').value.trim();
     const senha = document.getElementById('senha').value;
-    
-    // Buscar servidores cadastrados
-    const servidores = JSON.parse(localStorage.getItem('servidores') || '[]');
-    
-    // Verificar credenciais
-    const servidorValido = servidores.find(s => s.ri === ri && s.senha === senha);
-    
-    if (servidorValido) {
-        // Salvar sessão do servidor
-        sessionStorage.setItem('servidorLogado', JSON.stringify({
-            ri: servidorValido.ri,
-            nome: servidorValido.nome || 'Servidor'
-        }));
-        
-        // Redirecionar para painel do servidor
+
+    const { data, error } = await supabase
+        .from('servidores')
+        .select('*')
+        .eq('ri', ri)
+        .eq('senha', senha)
+        .single();
+
+    if (data) {
+        sessionStorage.setItem('servidorLogado', JSON.stringify(data));
         window.location.href = 'servidor.html';
     } else {
         document.getElementById('errorMsg').style.display = 'block';
-        setTimeout(() => {
-            document.getElementById('errorMsg').style.display = 'none';
-        }, 3000);
     }
 }
 
-// Permitir login com Enter
-document.addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        fazerLogin();
-    }
 });
 </script>
 </body>
