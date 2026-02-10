@@ -1,0 +1,12 @@
+﻿{
+  "name": "croqui-oficial",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Sistema de Croqui - Prefeitura de Botucatu",
+  "engines": {
+    "node": ">=18.x"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.3"
+  }
+}
