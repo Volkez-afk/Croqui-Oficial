@@ -1,26 +1,277 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Solicitar</title>
-<link rel="stylesheet" href="style.css">
-<script src="supabase.js"></script>
-</head>
+<title>Solicitação de Croqui – Prefeitura de Botucatu</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: linear-gradient(180deg, #0b3c5d, #f4f6f8);
+}
 
+.container {
+    max-width: 950px;
+    margin: 40px auto;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+    padding: 40px;
+    animation: fadeIn 0.8s ease;
+}
+
+h1 {
+    text-align: center;
+    color: #0b3c5d;
+}
+
+.subtitle {
+    text-align: center;
+    color: #555;
+    margin-bottom: 30px;
+}
+
+fieldset {
+    border: 1px solid #d0d7de;
+    padding: 25px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+legend {
+    font-weight: bold;
+    color: #0b3c5d;
+    padding: 0 10px;
+}
+
+label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 6px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+input[type="file"] {
+    padding: 6px;
+}
+
+.hidden {
+    display: none;
+}
+
+.tipo-solicitacao {
+    text-align: center;
+}
+
+.tipo-opcoes {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 20px;
+}
+
+.opcao {
+    border: 2px solid #d0d7de;
+    border-radius: 12px;
+    padding: 22px 32px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #f9fafb;
+}
+
+.opcao input {
+    display: none;
+}
+
+.opcao span {
+    font-size: 16px;
+    font-weight: bold;
+    color: #0b3c5d;
+}
+
+.opcao:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.opcao:has(input:checked) {
+    background: #0b3c5d;
+    border-color: #0b3c5d;
+}
+
+.opcao:has(input:checked) span {
+    color: #ffffff;
+}
+
+.aviso {
+    margin-top: 15px;
+    font-size: 13px;
+    color: #777;
+}
+
+.inline-campos {
+    display: flex;
+    gap: 20px;
+    align-items: flex-end;
+}
+
+.inline-campos .menor {
+    width: 120px;
+}
+
+.tooltip {
+    display: inline-block;
+    margin-left: 8px;
+    background: #0b3c5d;
+    color: #fff;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 18px;
+    cursor: help;
+    position: relative;
+}
+
+.tooltip:hover::after {
+    content: "Apresentar Matrícula, escritura ou contrato de compra e venda com firma reconhecida ou assinatura digital validada. QUALQUER DOCUMENTO APRESENTADO DEVE ESTAR ATUALIZADO!";
+    position: absolute;
+    top: 26px;
+    left: -20px;
+    width: 340px;
+    background: #ffffff;
+    color: #333;
+    border: 1px solid #ccc;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    z-index: 10;
+}
+
+button {
+    width: 100%;
+    padding: 16px;
+    background: #0b3c5d;
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 30px;
+    transition: all 0.3s ease;
+}
+
+button:disabled {
+    background: #9aa7b1;
+    cursor: not-allowed;
+}
+
+button:not(:disabled):hover {
+    background: #145374;
+    transform: translateY(-2px);
+}
+
+.footer {
+    text-align: center;
+    font-size: 13px;
+    color: #555;
+    margin-top: 30px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
+</head>
 <body>
 
-<h2>Solicitação de Croqui</h2>
+<div class="container">
+    <h1>Solicitação de Croqui</h1>
+    <p class="subtitle">Prefeitura Municipal de Botucatu</p>
 
-<input id="nome" placeholder="Nome">
-<input id="cpf" placeholder="CPF">
-<input id="endereco" placeholder="Endereço">
+    <fieldset class="tipo-solicitacao">
+        <legend>Tipo de Solicitação</legend>
+        <div class="tipo-opcoes">
+            <label class="opcao">
+                <input type="radio" name="tipoCroqui" value="oficial" onchange="mostrarCampos()">
+                <span>Croqui Oficial</span>
+            </label>
+            <label class="opcao">
+                <input type="radio" name="tipoCroqui" value="consulta" onchange="mostrarCampos()">
+                <span>Apenas para Consulta de Localização</span>
+            </label>
+        </div>
+        <p class="aviso">Selecione uma opção para continuar</p>
+    </fieldset>
 
-<button onclick="enviar()">Enviar</button>
+    <fieldset id="croquiOficial" class="hidden">
+        <legend>Dados do Solicitante</legend>
+        <label>Nome Completo do Solicitante</label>
+        <input type="text" id="nomeCompleto">
+        <label>CPF do Solicitante</label>
+        <input type="text" id="cpf" placeholder="XXX.XXX.XXX-XX" maxlength="14">
+        <label>
+            Comprovação de Posse do Imóvel (PDF)
+            <span class="tooltip">?</span>
+        </label>
+        <input type="file" id="comprovacao" accept=".pdf">
+    </fieldset>
 
-<script type="module">
-import { supabase } from './supabase.js'
+    <fieldset id="dadosImovel" class="hidden">
+        <legend>Identificação do Imóvel</legend>
+        <label>Identificação Municipal (IPTU)</label>
+        <input type="text" id="iptu" placeholder="XX.XXXX.XXXX" maxlength="12">
+        <div class="inline-campos">
+            <div style="flex:1">
+                <label>Logradouro</label>
+                <input type="text" id="logradouro">
+            </div>
+            <div class="menor">
+                <label>Número</label>
+                <input type="text" id="numero">
+            </div>
+        </div>
+        <label>Loteamento / Bairro</label>
+        <input type="text" id="bairro">
+        <div class="inline-campos">
+            <div class="menor">
+                <label>Quadra</label>
+                <input type="text" id="quadra" maxlength="5">
+            </div>
+            <div class="menor">
+                <label>Lote</label>
+                <input type="text" id="lote" maxlength="4">
+            </div>
+        </div>
+    </fieldset>
 
-window.mostrarCampos = function() {
+    <button id="btnEnviar" disabled onclick="enviarSolicitacao()">Enviar Solicitação</button>
+
+    <div class="footer">
+        Atendimento: Segunda a Sexta-feira, das 08h às 16h30<br>
+        Prefeitura Municipal de Botucatu
+    </div>
+</div>
+
+<script>
+// Inicializar localStorage se necessário
+if (!localStorage.getItem('solicitacoes')) {
+    localStorage.setItem('solicitacoes', JSON.stringify([]));
+}
+
+function mostrarCampos() {
     const tipo = document.querySelector('input[name="tipoCroqui"]:checked');
     const botao = document.getElementById("btnEnviar");
 
@@ -39,31 +290,73 @@ window.mostrarCampos = function() {
     }
 }
 
-window.enviarSolicitacao = async function(){
+// Máscara CPF
+document.getElementById("cpf").addEventListener("input", function(e) {
+    e.target.value = e.target.value
+        .replace(/\D/g, "")
+        .replace(/(\d{3})(\d)/, "$1.$2")
+        .replace(/(\d{3})(\d)/, "$1.$2")
+        .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+});
 
-    const { data: user } = await supabase.auth.getUser()
+// Máscara IPTU
+document.getElementById("iptu").addEventListener("input", function(e) {
+    e.target.value = e.target.value
+        .replace(/\D/g, "")
+        .replace(/(\d{2})(\d)/, "$1.$2")
+        .replace(/(\d{4})(\d)/, "$1.$2");
+});
 
+function gerarNumeroSolicitacao() {
+    const hoje = new Date();
+    const ano = hoje.getFullYear();
+    const totalSolicitacoes = JSON.parse(localStorage.getItem('solicitacoes')).length + 1;
+    return `${totalSolicitacoes}/${ano}`;
+}
+
+function enviarSolicitacao() {
+    const tipo = document.querySelector('input[name="tipoCroqui"]:checked').value;
+    const tipoNome = tipo === 'oficial' ? 'Croqui Oficial' : 'Croqui para Localização';
+    
     const solicitacao = {
-        usuario_id: user.user.id,
-        tipo: document.querySelector('input[name="tipoCroqui"]:checked').value,
-        nome: document.getElementById('nomeCompleto').value,
+        id: Date.now(),
+        numero: gerarNumeroSolicitacao(),
+        tipo: tipoNome,
+        nome: document.getElementById('nomeCompleto').value || "Não informado",
         cpf: document.getElementById('cpf').value,
         iptu: document.getElementById('iptu').value,
         endereco: document.getElementById('logradouro').value,
-        numero: document.getElementById('numero').value,
+        numeroImovel: document.getElementById('numero').value,
         bairro: document.getElementById('bairro').value,
         quadra: document.getElementById('quadra').value,
         lote: document.getElementById('lote').value,
-        status: 'pendente'
-    }
-
-    const {error} = await supabase.from('solicitacoes').insert([solicitacao])
-
-    if(error){
-        alert(error.message)
-    }else{
-        alert("Solicitação enviada com sucesso!")
-        window.location.href="index.html"
-    }
+        data: new Date().toISOString(),
+        status: 'pendente',
+        servidor: null,
+        resultado: null,
+        motivo: null
+    };
+    
+    // Salvar no localStorage
+    const solicitacoes = JSON.parse(localStorage.getItem('solicitacoes'));
+    solicitacoes.push(solicitacao);
+    localStorage.setItem('solicitacoes', JSON.stringify(solicitacoes));
+    
+    // Gerar número aleatório para demonstração
+    const numeroDemonstracao = Math.floor(Math.random() * 100) + 1;
+    
+    alert(
+        `Solicitação ${solicitacao.numero} encaminhada ao cadastro municipal!\n\n` +
+        `Número do protocolo: ${numeroDemonstracao}/2026\n` +
+        `Status: Aguardando análise\n\n` +
+        `Você será redirecionado para a página inicial.`
+    );
+    
+    // Redirecionar após 3 segundos
+    setTimeout(() => {
+        window.location.href = 'index.html';
+    }, 3000);
 }
 </script>
+</body>
+</html>
