@@ -1,17 +1,258 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Sistema Croqui</title>
-<link rel="stylesheet" href="style.css">
-</head>
+<title>Solicitação de Croqui | Prefeitura de Botucatu</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root {
+  --azul-principal:#0b4db8;
+  --azul-secundario:#1e5fd6;
+  --azul-claro:#eaf1fb;
+  --branco:#ffffff;
+  --cinza-texto:#444;
+  --amarelo:#f4b400;
+}
 
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
+
+body{
+  min-height:100vh;
+  background:radial-gradient(circle at top, var(--azul-claro), #fff);
+  display:flex;
+  flex-direction:column;
+}
+
+.topbar{
+  background:linear-gradient(90deg,var(--azul-principal),var(--azul-secundario));
+  color:#fff;
+  padding:10px 30px;
+  display:flex;
+  justify-content:center;
+  gap:40px;
+  font-size:0.9rem;
+  animation:slideDown .8s ease;
+}
+
+@keyframes slideDown{
+  from{opacity:0;transform:translateY(-20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+header{
+  background:#fff;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:20px;
+  padding:22px;
+  box-shadow:0 4px 12px rgba(0,0,0,.15);
+  animation:fadeIn .9s ease .2s both;
+}
+
+header img{height:80px}
+
+header .titulo{text-align:center}
+header .titulo strong{font-size:1.5rem;color:var(--azul-principal)}
+header .titulo span{font-size:.95rem;color:#666}
+
+@keyframes fadeIn{
+  from{opacity:0}
+  to{opacity:1}
+}
+
+#pagina-inicial{
+  flex:1;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:60px 20px;
+}
+
+.inicial-container{
+  background:#fff;
+  width:100%;
+  max-width:820px;
+  padding:65px 55px;
+  border-radius:18px;
+  box-shadow:0 30px 80px rgba(0,0,0,.18);
+  text-align:center;
+  animation:zoomFade 1s ease;
+}
+
+@keyframes zoomFade{
+  from{opacity:0;transform:scale(.96)}
+  to{opacity:1;transform:scale(1)}
+}
+
+.inicial-logo img{
+  height:150px;
+  margin-bottom:30px;
+  animation:float 3s ease-in-out infinite;
+}
+
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-8px)}
+}
+
+h1{
+  color:var(--azul-principal);
+  font-size:2.3rem;
+  margin-bottom:14px;
+}
+
+p{
+  font-size:1.1rem;
+  color:var(--cinza-texto);
+  margin-bottom:40px;
+}
+
+.btn-principal{
+  width:100%;
+  padding:24px;
+  font-size:1.3rem;
+  font-weight:bold;
+  border:none;
+  border-radius:14px;
+  color:#fff;
+  background:linear-gradient(135deg,var(--azul-secundario),var(--azul-principal));
+  cursor:pointer;
+  transition:.4s ease;
+}
+
+.btn-principal:hover{
+  transform:translateY(-4px) scale(1.01);
+  box-shadow:0 18px 40px rgba(0,0,0,.3);
+}
+
+.botoes-secundarios{
+  margin-top:45px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:18px;
+}
+
+.btn-secundario{
+  padding:16px;
+  border-radius:12px;
+  border:2px solid var(--azul-principal);
+  background:#fff;
+  font-size:1.05rem;
+  font-weight:bold;
+  color:var(--azul-principal);
+  cursor:pointer;
+  transition:.35s ease;
+}
+
+.btn-secundario i{margin-right:8px}
+
+.btn-secundario:hover{
+  background:var(--azul-principal);
+  color:#fff;
+  transform:translateY(-3px);
+}
+
+footer{
+  background:linear-gradient(180deg,var(--azul-principal),#062f70);
+  color:#fff;
+  padding:45px 20px 25px;
+  text-align:center;
+}
+
+.footer-conteudo{
+  display:flex;
+  justify-content:center;
+  gap:80px;
+  flex-wrap:wrap;
+  margin-bottom:25px;
+}
+
+footer h4{margin-bottom:12px;font-size:1.1rem}
+footer ul{list-style:none}
+footer li{margin-bottom:8px}
+footer a{color:#fff;text-decoration:none;font-size:.95rem}
+footer a:hover{text-decoration:underline}
+
+.footer-bottom{
+  border-top:1px solid rgba(255,255,255,.3);
+  padding-top:15px;
+  font-size:.85rem;
+  opacity:.85;
+}
+</style>
+</head>
 <body>
 
-<h1>Sistema Oficial de Solicitação de Croqui</h1>
+<div class="topbar">
+  <div><i class="fa-solid fa-clock"></i> Atendimento: Segunda a Sexta, das 08h às 16h30</div>
+  <div><i class="fa-solid fa-universal-access"></i> Acessibilidade</div>
+</div>
 
-<a href="login.html"><button>Entrar</button></a>
-<a href="cadastro.html"><button>Cadastrar</button></a>
+<header>
+  <img src="https://www.botucatu.sp.gov.br/public/admin/globalarq/uploads/images/S%C3%ADmbolos/terceiro_brasao.jpg">
+  <div class="titulo">
+    <strong>Prefeitura Municipal de Botucatu</strong><br>
+    <span>Portal de Serviços Digitais</span>
+  </div>
+</header>
+
+<div id="pagina-inicial">
+  <div class="inicial-container">
+    <div class="inicial-logo">
+      <img src="https://www.botucatu.sp.gov.br/public/admin/globalarq/uploads/images/S%C3%ADmbolos/terceiro_brasao.jpg">
+    </div>
+
+    <h1>Solicitação de Croqui</h1>
+    <p>Serviço digital oficial para solicitação, análise e emissão de croquis destinados à atribuição de número oficial de imóveis no Município de Botucatu.</p>
+
+    <button class="btn-principal" onclick="window.location.href='solicitar.html'">SOLICITAR CROQUI</button>
+
+    <div class="botoes-secundarios">
+      <button class="btn-secundario" onclick="window.location.href='login-servidor.html'">
+        <i class="fa-solid fa-user-tie"></i> Servidor
+      </button>
+      <button class="btn-secundario" onclick="window.location.href='admin.html'">
+        <i class="fa-solid fa-gear"></i> Administrador
+      </button>
+      <button class="btn-secundario" onclick="window.location.href='https://www.sabesp.com.br'">
+        <i class="fa-solid fa-building"></i> SABESP
+      </button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-conteudo">
+    <div>
+      <h4>Prefeitura</h4>
+      <ul>
+        <li><a href="https://www.botucatu.sp.gov.br" target="_blank">Portal Oficial</a></li>
+        <li><a href="https://www.botucatu.sp.gov.br/diario-oficial" target="_blank">Diário Oficial</a></li>
+        <li><a href="https://www.botucatu.sp.gov.br/transparencia" target="_blank">Transparência</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Cidadão</h4>
+      <ul>
+        <li><a href="https://www.botucatu.sp.gov.br/servicos" target="_blank">Serviços Online</a></li>
+        <li><a href="https://www.botucatu.sp.gov.br/editais" target="_blank">Editais</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contato</h4>
+      <ul>
+        <li><i class="fa-solid fa-location-dot"></i> Botucatu – SP</li>
+        <li><i class="fa-solid fa-phone"></i> (14) 3811-1000</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    © Prefeitura Municipal de Botucatu — Sistema de Solicitação de Croquis
+  </div>
+</footer>
 
 </body>
 </html>
