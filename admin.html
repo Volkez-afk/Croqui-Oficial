@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Painel</title>
+<link rel="stylesheet" href="style.css">
+<script src="supabase.js"></script>
+</head>
+
+<body>
+
+<h2>Painel do Servidor</h2>
+
+<div id="lista"></div>
+
+<script>
+
+async function carregar(){
+
+const {data}=await db.from('solicitacoes').select('*')
+
+let html=""
+
+data.forEach(e=>{
+html+=`
+<p>
+${e.nome} - ${e.endereco}
+
+<button onclick="deferir('${e.id}')">Deferir</button>
+<button onclick="indeferir('${e.id}')">Indeferir</button>
+</p>`
+})
+
+document.getElementById('lista').innerHTML=html
+}
+
+async function deferir(id){
+
+await db.from('solicitacoes').update({status:'deferido'}).eq('id',id)
+
+await fetch("URL_SERVICO_EMAIL",{
+method:"POST",
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({
+tipo:"deferido",
+id
+})
+})
+
+alert("Deferido e email enviado")
+carregar()
+}
+
+async function indeferir(id){
+
+const motivo=prompt("Motivo do indeferimento")
+
+await db.from('solicitacoes').update({status:'indeferido',motivo}).eq('id',id)
+
+await fetch("URL_SERVICO_EMAIL",{
+method:"POST",
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({
+tipo:"indeferido",
+id,
+motivo
+})
+})
+
+alert("Indeferido e email enviado")
+carregar()
+}
+
+carregar()
+
+</script>
+
+</body>
+</html>
