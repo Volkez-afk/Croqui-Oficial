@@ -265,10 +265,12 @@ button:not(:disabled):hover {
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase.js"></script>
-
 <script>
+// Inicializar localStorage se necessário
+if (!localStorage.getItem('solicitacoes')) {
+    localStorage.setItem('solicitacoes', JSON.stringify([]));
+}
+
 function mostrarCampos() {
     const tipo = document.querySelector('input[name="tipoCroqui"]:checked');
     const botao = document.getElementById("btnEnviar");
@@ -288,26 +290,73 @@ function mostrarCampos() {
     }
 }
 
-async function enviarSolicitacao(){
+// Máscara CPF
+document.getElementById("cpf").addEventListener("input", function(e) {
+    e.target.value = e.target.value
+        .replace(/\D/g, "")
+        .replace(/(\d{3})(\d)/, "$1.$2")
+        .replace(/(\d{3})(\d)/, "$1.$2")
+        .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+});
 
+// Máscara IPTU
+document.getElementById("iptu").addEventListener("input", function(e) {
+    e.target.value = e.target.value
+        .replace(/\D/g, "")
+        .replace(/(\d{2})(\d)/, "$1.$2")
+        .replace(/(\d{4})(\d)/, "$1.$2");
+});
+
+function gerarNumeroSolicitacao() {
+    const hoje = new Date();
+    const ano = hoje.getFullYear();
+    const totalSolicitacoes = JSON.parse(localStorage.getItem('solicitacoes')).length + 1;
+    return `${totalSolicitacoes}/${ano}`;
+}
+
+function enviarSolicitacao() {
     const tipo = document.querySelector('input[name="tipoCroqui"]:checked').value;
-
-    const protocolo = "PR-" + Date.now();
-
-    const { error } = await supabase
-        .from("solicitacoes")
-        .insert([{
-            protocolo: protocolo,
-            endereco: document.getElementById('logradouro').value + ", " + document.getElementById('numero').value,
-            status: "pendente"
-        }]);
-
-    if(error){
-        alert("Erro ao enviar solicitação");
-        return;
-    }
-
-    alert("Solicitação enviada com sucesso. Protocolo: " + protocolo);
-    window.location.href = "index.html";
+    const tipoNome = tipo === 'oficial' ? 'Croqui Oficial' : 'Croqui para Localização';
+    
+    const solicitacao = {
+        id: Date.now(),
+        numero: gerarNumeroSolicitacao(),
+        tipo: tipoNome,
+        nome: document.getElementById('nomeCompleto').value || "Não informado",
+        cpf: document.getElementById('cpf').value,
+        iptu: document.getElementById('iptu').value,
+        endereco: document.getElementById('logradouro').value,
+        numeroImovel: document.getElementById('numero').value,
+        bairro: document.getElementById('bairro').value,
+        quadra: document.getElementById('quadra').value,
+        lote: document.getElementById('lote').value,
+        data: new Date().toISOString(),
+        status: 'pendente',
+        servidor: null,
+        resultado: null,
+        motivo: null
+    };
+    
+    // Salvar no localStorage
+    const solicitacoes = JSON.parse(localStorage.getItem('solicitacoes'));
+    solicitacoes.push(solicitacao);
+    localStorage.setItem('solicitacoes', JSON.stringify(solicitacoes));
+    
+    // Gerar número aleatório para demonstração
+    const numeroDemonstracao = Math.floor(Math.random() * 100) + 1;
+    
+    alert(
+        `Solicitação ${solicitacao.numero} encaminhada ao cadastro municipal!\n\n` +
+        `Número do protocolo: ${numeroDemonstracao}/2026\n` +
+        `Status: Aguardando análise\n\n` +
+        `Você será redirecionado para a página inicial.`
+    );
+    
+    // Redirecionar após 3 segundos
+    setTimeout(() => {
+        window.location.href = 'index.html';
+    }, 3000);
 }
 </script>
+</body>
+</html>
