@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Debug</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<h2>DEBUG</h2>
+<div id="erro"></div>
+
+<script>
+const p=new URLSearchParams(window.location.search)
+document.getElementById('erro').innerText=p.get("erro")
+</script>
+
+</body>
+</html>
