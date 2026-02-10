@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Cadastro</title>
+<link rel="stylesheet" href="style.css">
+<script src="supabase.js"></script>
+</head>
+
+<body>
+
+<h2>Cadastro</h2>
+
+<input id="email" placeholder="Email">
+<input id="senha" type="password" placeholder="Senha">
+
+<button onclick="cad()">Cadastrar</button>
+
+<script>
+
+async function cad(){
+
+const email=document.getElementById('email').value
+const senha=document.getElementById('senha').value
+
+const {error}=await db.auth.signUp({email,password:senha})
+
+if(error){
+window.location="debug.html?erro="+error.message
+return
+}
+
+alert("Cadastro realizado")
+
+}
+
+</script>
+</body>
+</html>
