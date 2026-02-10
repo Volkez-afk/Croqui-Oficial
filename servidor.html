@@ -4,12 +4,262 @@
 <meta charset="UTF-8">
 <title>Painel do Servidor – Solicitações de Croqui</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
 
-<link rel="stylesheet" href="style.css">
+body {
+    background: #f4f6f8;
+    display: flex;
+    height: 100vh;
+}
+
+/* MENU LATERAL */
+.sidebar {
+    width: 280px;
+    background: linear-gradient(180deg, #0b3c5d, #0a2d46);
+    color: #fff;
+    padding: 20px;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid rgba(255,255,255,0.1);
+}
+
+.menu-item {
+    padding: 14px 20px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    background: rgba(255,255,255,0.08);
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.menu-item:hover {
+    background: rgba(255,255,255,0.15);
+}
+
+.menu-item.active {
+    background: rgba(255,255,255,0.25);
+    font-weight: bold;
+}
+
+/* CONTEÚDO PRINCIPAL */
+.content {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+}
+
+.card {
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    margin-bottom: 25px;
+}
+
+.card h3 {
+    margin-top: 0;
+    color: #0b3c5d;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #eee;
+    margin-bottom: 20px;
+}
+
+/* LISTA DE SOLICITAÇÕES */
+.lista-solicitacoes {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.solicitacao-item {
+    padding: 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    background: #f9f9f9;
+}
+
+.solicitacao-item:hover {
+    background: #eef5ff;
+    border-color: #0b3c5d;
+    transform: translateX(5px);
+}
+
+.solicitacao-item .numero {
+    font-weight: bold;
+    color: #0b3c5d;
+}
+
+.solicitacao-item .tipo {
+    color: #666;
+    font-size: 14px;
+}
+
+.solicitacao-item .data {
+    font-size: 12px;
+    color: #888;
+    margin-top: 5px;
+}
+
+/* DETALHES DA SOLICITAÇÃO */
+.detalhes-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.info-group {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.info-group strong {
+    width: 200px;
+    color: #333;
+}
+
+.info-group span {
+    flex: 1;
+    color: #555;
+}
+
+/* BOTÕES */
+.acoes-container {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.btn {
+    padding: 12px 24px;
+    border-radius: 8px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 14px;
+}
+
+.btn-primary {
+    background: #0b3c5d;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background: #145374;
+}
+
+.btn-danger {
+    background: #d32f2f;
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background: #b71c1c;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: #fff;
+}
+
+.btn-secondary:hover {
+    background: #545b62;
+}
+
+/* FORMULÁRIOS */
+.form-section {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    border-left: 4px solid #0b3c5d;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+textarea, input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* UTILIDADES */
+.hidden {
+    display: none;
+}
+
+.header-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+.header-info h1 {
+    color: #0b3c5d;
+    font-size: 24px;
+}
+
+.servidor-info {
+    background: #e3f2fd;
+    padding: 10px 15px;
+    border-radius: 6px;
+    color: #0b3c5d;
+    font-weight: bold;
+}
+
+.logout-btn {
+    padding: 8px 16px;
+    background: transparent;
+    color: #0b3c5d;
+    border: 1px solid #0b3c5d;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.logout-btn:hover {
+    background: #0b3c5d;
+    color: white;
+}
+</style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase.js"></script>
 </head>
 <body>
 
@@ -27,142 +277,377 @@
     <div class="menu-item" onclick="abrirAba('atendidas', this)">
         <i class="fas fa-check-circle"></i> Atendidas
     </div>
+    
+    <div class="menu-item" onclick="abrirAba('todas', this)">
+        <i class="fas fa-list"></i> Todas as Solicitações
+    </div>
 </div>
 
 <div class="content">
-
-<div class="header-info">
-    <h1>Sistema de Gerenciamento de Croquis</h1>
-    <div>
-        <span class="servidor-info" id="nomeServidor"></span>
-        <button class="logout-btn" onclick="logout()">Sair</button>
+    <div class="header-info">
+        <h1>Sistema de Gerenciamento de Croquis</h1>
+        <div>
+            <span class="servidor-info" id="nomeServidor"></span>
+            <button class="logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Sair
+            </button>
+        </div>
     </div>
-</div>
 
-<div id="listaContainer" class="card">
-    <h3 id="tituloLista">Solicitações Pendentes</h3>
-    <div id="listaSolicitacoes"></div>
-</div>
-
-<div id="detalhesContainer" class="card hidden">
-    <h3 id="tituloDetalhes"></h3>
-    <div id="detalhesConteudo"></div>
-
-    <div id="acoesAnalise" class="acoes-container">
-        <input type="file" id="arquivoDeferir" accept=".pdf">
-        <button class="btn btn-primary" onclick="deferir()">Deferir</button>
-        <textarea id="motivoIndeferir" placeholder="Motivo indeferimento"></textarea>
-        <button class="btn btn-danger" onclick="indeferir()">Indeferir</button>
+    <!-- LISTA DE SOLICITAÇÕES -->
+    <div id="listaContainer" class="card">
+        <h3 id="tituloLista">Solicitações Pendentes</h3>
+        <div class="lista-solicitacoes" id="listaSolicitacoes">
+            <!-- Solicitações serão carregadas via JavaScript -->
+        </div>
     </div>
-</div>
 
+    <!-- DETALHES DA SOLICITAÇÃO -->
+    <div id="detalhesContainer" class="card hidden">
+        <h3 id="tituloDetalhes">Detalhes da Solicitação</h3>
+        
+        <div class="detalhes-container" id="detalhesConteudo">
+            <!-- Conteúdo será preenchido via JavaScript -->
+        </div>
+        
+        <!-- AÇÕES PARA SOLICITAÇÕES PENDENTES -->
+        <div id="acoesPendentes" class="acoes-container">
+            <button class="btn btn-primary" onclick="aceitarSolicitacao()">
+                <i class="fas fa-check"></i> Aceitar para Análise
+            </button>
+            <button class="btn btn-secondary" onclick="voltarParaLista()">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </button>
+        </div>
+        
+        <!-- AÇÕES PARA SOLICITAÇÕES EM ANÁLISE -->
+        <div id="acoesAnalise" class="acoes-container hidden">
+            <div class="form-section">
+                <h4><i class="fas fa-file-pdf"></i> Finalizar Solicitação</h4>
+                
+                <div id="opcoesFinalizacao">
+                    <button class="btn btn-primary" onclick="mostrarOpcao('deferir')">
+                        <i class="fas fa-check-circle"></i> Deferir
+                    </button>
+                    <button class="btn btn-danger" onclick="mostrarOpcao('indeferir')">
+                        <i class="fas fa-times-circle"></i> Indeferir
+                    </button>
+                </div>
+                
+                <!-- FORMULÁRIO DE DEFERIMENTO -->
+                <div id="formDeferir" class="form-section hidden">
+                    <div class="form-group">
+                        <label><i class="fas fa-file-upload"></i> Anexar Croqui Aprovado (PDF)</label>
+                        <input type="file" id="arquivoDeferir" accept=".pdf">
+                    </div>
+                    <button class="btn btn-primary" onclick="finalizarSolicitacao('deferido')">
+                        <i class="fas fa-paper-plane"></i> Enviar Croqui
+                    </button>
+                </div>
+                
+                <!-- FORMULÁRIO DE INDEFERIMENTO -->
+                <div id="formIndeferir" class="form-section hidden">
+                    <div class="form-group">
+                        <label><i class="fas fa-comment"></i> Motivo do Indeferimento</label>
+                        <textarea id="motivoIndeferir" placeholder="Descreva o motivo do indeferimento..."></textarea>
+                    </div>
+                    <button class="btn btn-danger" onclick="finalizarSolicitacao('indeferido')">
+                        <i class="fas fa-paper-plane"></i> Enviar Indeferimento
+                    </button>
+                </div>
+            </div>
+            
+            <button class="btn btn-secondary" onclick="voltarParaLista()">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </button>
+        </div>
+    </div>
 </div>
 
 <script>
-
-let servidorLogado = JSON.parse(sessionStorage.getItem("servidorLogado"));
-let solicitacaoAtual = null;
+// Variáveis globais
 let abaAtual = 'pendentes';
+let solicitacaoSelecionada = null;
+let servidorLogado = null;
 
-document.getElementById("nomeServidor").innerText = servidorLogado.nome;
-
-async function carregarSolicitacoes(){
-
-let { data } = await supabase
-.from("solicitacoes")
-.select("*");
-
-renderizar(data);
-
-}
-
-function renderizar(lista){
-
-let div = document.getElementById("listaSolicitacoes");
-div.innerHTML="";
-
-lista.filter(s=> s.status==abaAtual).forEach(s=>{
-
-let el = document.createElement("div");
-el.className="solicitacao-item";
-
-el.innerHTML=`
-<b>${s.numero}</b><br>
-${s.nome}<br>
-<button onclick='abrir(${JSON.stringify(s)})'>Abrir</button>
-`;
-
-div.appendChild(el);
-
+// Verificar login ao carregar a página
+document.addEventListener('DOMContentLoaded', function() {
+    servidorLogado = JSON.parse(sessionStorage.getItem('servidorLogado'));
+    
+    if (!servidorLogado) {
+        window.location.href = 'login-servidor.html';
+        return;
+    }
+    
+    // Exibir nome do servidor
+    document.getElementById('nomeServidor').textContent = servidorLogado.nome;
+    
+    // Carregar solicitações
+    carregarSolicitacoes();
 });
 
+function carregarSolicitacoes() {
+    const todasSolicitacoes = JSON.parse(localStorage.getItem('solicitacoes') || '[]');
+    renderizarLista(todasSolicitacoes);
 }
 
-function abrir(s){
-solicitacaoAtual=s;
+function renderizarLista(solicitacoes) {
+    const listaContainer = document.getElementById('listaSolicitacoes');
+    listaContainer.innerHTML = '';
+    
+    // Filtrar solicitações conforme a aba atual
+    let solicitacoesFiltradas = [];
+    const tituloMap = {
+        'pendentes': 'Solicitações Pendentes',
+        'analise': 'Solicitações em Análise',
+        'atendidas': 'Solicitações Atendidas',
+        'todas': 'Todas as Solicitações'
+    };
+    
+    document.getElementById('tituloLista').textContent = tituloMap[abaAtual];
+    
+    switch(abaAtual) {
+        case 'pendentes':
+            solicitacoesFiltradas = solicitacoes.filter(s => s.status === 'pendente');
+            break;
+        case 'analise':
+            solicitacoesFiltradas = solicitacoes.filter(s => 
+                s.status === 'em_analise' && s.servidor === servidorLogado.ri
+            );
+            break;
+        case 'atendidas':
+            solicitacoesFiltradas = solicitacoes.filter(s => s.status === 'atendida');
+            break;
+        case 'todas':
+            solicitacoesFiltradas = solicitacoes;
+            break;
+    }
+    
+    if (solicitacoesFiltradas.length === 0) {
+        listaContainer.innerHTML = `
+            <div style="text-align: center; padding: 40px; color: #666;">
+                <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 20px;"></i>
+                <p>Nenhuma solicitação encontrada nesta categoria.</p>
+            </div>
+        `;
+        return;
+    }
+    
+    solicitacoesFiltradas.forEach(solicitacao => {
+        const item = document.createElement('div');
+        item.className = 'solicitacao-item';
+        item.onclick = () => mostrarDetalhes(solicitacao);
+        
+        const tipoClass = solicitacao.tipo === 'Croqui Oficial' ? 'oficial' : 'consulta';
+        const statusClass = solicitacao.status === 'pendente' ? 'pendente' : 
+                          solicitacao.status === 'em_analise' ? 'analise' : 'atendida';
+        
+        item.innerHTML = `
+            <div class="numero">Solicitação ${solicitacao.numero}</div>
+            <div class="tipo">
+                <span class="badge ${tipoClass}">${solicitacao.tipo}</span>
+                <span class="badge ${statusClass}">${solicitacao.status === 'pendente' ? 'Pendente' : 
+                    solicitacao.status === 'em_analise' ? 'Em Análise' : 'Atendida'}</span>
+            </div>
+            <div class="data">
+                Recebida em: ${new Date(solicitacao.data).toLocaleDateString('pt-BR')}
+            </div>
+        `;
+        
+        listaContainer.appendChild(item);
+    });
+}
 
-document.getElementById("detalhesContainer").classList.remove("hidden");
+function abrirAba(aba, elemento) {
+    abaAtual = aba;
+    
+    // Atualizar menu ativo
+    document.querySelectorAll('.menu-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    elemento.classList.add('active');
+    
+    // Mostrar lista e esconder detalhes
+    document.getElementById('listaContainer').classList.remove('hidden');
+    document.getElementById('detalhesContainer').classList.add('hidden');
+    
+    // Recarregar lista
+    carregarSolicitacoes();
+}
 
-document.getElementById("detalhesConteudo").innerHTML=`
-Nome: ${s.nome}<br>
-IPTU: ${s.iptu}<br>
-<a target="_blank" href="${s.pdf_solicitado_url}">Ver PDF enviado</a>
+function mostrarDetalhes(solicitacao) {
+    solicitacaoSelecionada = solicitacao;
+    
+    document.getElementById('listaContainer').classList.add('hidden');
+    document.getElementById('detalhesContainer').classList.remove('hidden');
+    
+    // Atualizar título
+    document.getElementById('tituloDetalhes').textContent = 
+        `Solicitação ${solicitacao.numero} - ${solicitacao.tipo}`;
+    
+    // Preencher detalhes
+    const detalhes = document.getElementById('detalhesConteudo');
+    detalhes.innerHTML = `
+        <div class="info-group">
+            <strong>Status:</strong>
+            <span style="color: ${solicitacao.status === 'pendente' ? '#f39c12' : 
+                         solicitacao.status === 'em_analise' ? '#3498db' : '#27ae60'}; font-weight: bold;">
+                ${solicitacao.status === 'pendente' ? '⏳ Pendente' : 
+                  solicitacao.status === 'em_analise' ? '🔍 Em Análise' : '✅ Atendida'}
+            </span>
+        </div>
+        <div class="info-group">
+            <strong>Data de Recebimento:</strong>
+            <span>${new Date(solicitacao.data).toLocaleDateString('pt-BR')} ${new Date(solicitacao.data).toLocaleTimeString('pt-BR')}</span>
+        </div>
+        <div class="info-group">
+            <strong>Nome do Solicitante:</strong>
+            <span>${solicitacao.nome}</span>
+        </div>
+        <div class="info-group">
+            <strong>CPF:</strong>
+            <span>${solicitacao.cpf || 'Não informado'}</span>
+        </div>
+        <div class="info-group">
+            <strong>IPTU:</strong>
+            <span>${solicitacao.iptu}</span>
+        </div>
+        <div class="info-group">
+            <strong>Endereço:</strong>
+            <span>${solicitacao.endereco}, ${solicitacao.numeroImovel || 'S/N'}</span>
+        </div>
+        <div class="info-group">
+            <strong>Bairro:</strong>
+            <span>${solicitacao.bairro}</span>
+        </div>
+        <div class="info-group">
+            <strong>Quadra/Lote:</strong>
+            <span>${solicitacao.quadra} / ${solicitacao.lote}</span>
+        </div>
+        ${solicitacao.servidor ? `
+        <div class="info-group">
+            <strong>Servidor Responsável:</strong>
+            <span>${solicitacao.servidor}</span>
+        </div>
+        ` : ''}
+        ${solicitacao.resultado ? `
+        <div class="info-group">
+            <strong>Resultado:</strong>
+            <span style="color: ${solicitacao.resultado === 'deferido' ? '#27ae60' : '#e74c3c'};">
+                ${solicitacao.resultado === 'deferido' ? '✅ Deferido' : '❌ Indeferido'}
+            </span>
+        </div>
+        ` : ''}
+        ${solicitacao.motivo ? `
+        <div class="info-group">
+            <strong>Motivo:</strong>
+            <span>${solicitacao.motivo}</span>
+        </div>
+        ` : ''}
+    `;
+    
+    // Mostrar ações apropriadas
+    if (solicitacao.status === 'pendente') {
+        document.getElementById('acoesPendentes').classList.remove('hidden');
+        document.getElementById('acoesAnalise').classList.add('hidden');
+    } else if (solicitacao.status === 'em_analise' && solicitacao.servidor === servidorLogado.ri) {
+        document.getElementById('acoesPendentes').classList.add('hidden');
+        document.getElementById('acoesAnalise').classList.remove('hidden');
+        
+        // Resetar formulários
+        document.getElementById('opcoesFinalizacao').classList.remove('hidden');
+        document.getElementById('formDeferir').classList.add('hidden');
+        document.getElementById('formIndeferir').classList.add('hidden');
+    } else {
+        document.getElementById('acoesPendentes').classList.add('hidden');
+        document.getElementById('acoesAnalise').classList.add('hidden');
+    }
+}
+
+function aceitarSolicitacao() {
+    if (!solicitacaoSelecionada) return;
+    
+    const todasSolicitacoes = JSON.parse(localStorage.getItem('solicitacoes'));
+    const index = todasSolicitacoes.findIndex(s => s.id === solicitacaoSelecionada.id);
+    
+    if (index !== -1) {
+        todasSolicitacoes[index].status = 'em_analise';
+        todasSolicitacoes[index].servidor = servidorLogado.ri;
+        localStorage.setItem('solicitacoes', JSON.stringify(todasSolicitacoes));
+        
+        alert(`Solicitação ${solicitacaoSelecionada.numero} aceita para análise!`);
+        abrirAba('analise', document.querySelector('.menu-item:nth-child(2)'));
+    }
+}
+
+function mostrarOpcao(tipo) {
+    document.getElementById('opcoesFinalizacao').classList.add('hidden');
+    
+    if (tipo === 'deferir') {
+        document.getElementById('formDeferir').classList.remove('hidden');
+    } else {
+        document.getElementById('formIndeferir').classList.remove('hidden');
+    }
+}
+
+function finalizarSolicitacao(resultado) {
+    if (!solicitacaoSelecionada) return;
+    
+    const todasSolicitacoes = JSON.parse(localStorage.getItem('solicitacoes'));
+    const index = todasSolicitacoes.findIndex(s => s.id === solicitacaoSelecionada.id);
+    
+    if (index !== -1) {
+        todasSolicitacoes[index].status = 'atendida';
+        todasSolicitacoes[index].resultado = resultado === 'deferido' ? 'deferido' : 'indeferido';
+        
+        if (resultado === 'indeferido') {
+            const motivo = document.getElementById('motivoIndeferir').value;
+            if (!motivo.trim()) {
+                alert('Por favor, informe o motivo do indeferimento.');
+                return;
+            }
+            todasSolicitacoes[index].motivo = motivo;
+        }
+        
+        todasSolicitacoes[index].dataConclusao = new Date().toISOString();
+        localStorage.setItem('solicitacoes', JSON.stringify(todasSolicitacoes));
+        
+        const mensagem = resultado === 'deferido' 
+            ? 'Croqui deferido e enviado com sucesso!' 
+            : 'Solicitação indeferida com sucesso!';
+        
+        alert(mensagem);
+        abrirAba('atendidas', document.querySelector('.menu-item:nth-child(3)'));
+    }
+}
+
+function voltarParaLista() {
+    document.getElementById('listaContainer').classList.remove('hidden');
+    document.getElementById('detalhesContainer').classList.add('hidden');
+}
+
+function logout() {
+    sessionStorage.removeItem('servidorLogado');
+    window.location.href = 'index.html';
+}
+
+// Estilos para badges
+const style = document.createElement('style');
+style.textContent = `
+    .badge {
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: bold;
+        margin-right: 5px;
+    }
+    .badge.oficial { background: #3498db; color: white; }
+    .badge.consulta { background: #9b59b6; color: white; }
+    .badge.pendente { background: #f39c12; color: white; }
+    .badge.analise { background: #3498db; color: white; }
+    .badge.atendida { background: #27ae60; color: white; }
 `;
-
-}
-
-async function deferir(){
-
-let file = document.getElementById("arquivoDeferir").files[0];
-
-let path = "croquis/"+Date.now()+".pdf";
-
-await supabase.storage.from("croquis").upload(path,file);
-
-let {data}=supabase.storage.from("croquis").getPublicUrl(path);
-
-await supabase.from("solicitacoes")
-.update({
-status:"atendidas",
-resultado:"deferido",
-pdf_final_url:data.publicUrl
-})
-.eq("id",solicitacaoAtual.id);
-
-alert("Deferido!");
-carregarSolicitacoes();
-
-}
-
-async function indeferir(){
-
-let motivo=document.getElementById("motivoIndeferir").value;
-
-await supabase.from("solicitacoes")
-.update({
-status:"atendidas",
-resultado:"indeferido",
-motivo:motivo
-})
-.eq("id",solicitacaoAtual.id);
-
-alert("Indeferido!");
-carregarSolicitacoes();
-
-}
-
-function abrirAba(a){
-abaAtual=a;
-carregarSolicitacoes();
-}
-
-function logout(){
-sessionStorage.clear();
-location.href="index.html";
-}
-
-carregarSolicitacoes();
-
+document.head.appendChild(style);
 </script>
 </body>
 </html>
