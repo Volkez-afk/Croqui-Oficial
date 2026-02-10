@@ -307,76 +307,39 @@ document.getElementById("iptu").addEventListener("input", function(e) {
         .replace(/(\d{4})(\d)/, "$1.$2");
 });
 
-function gerarNumeroSolicitacao() {
-    const hoje = new Date();
-    const ano = hoje.getFullYear();
-    const totalSolicitacoes = JSON.parse(localStorage.getItem('solicitacoes')).length + 1;
-    return `${totalSolicitacoes}/${ano}`;
+async function enviarSolicitacao() {
+
+    const tipo = document.querySelector('input[name="tipoCroqui"]:checked').value;
+
+    const { data: userData } = await supabase.auth.getUser();
+    const usuario = userData.user;
+
+    const tipoNome = tipo === 'oficial' ? 'Croqui Oficial' : 'Croqui para Localização';
+
+    const { error } = await supabase
+        .from('solicitacoes')
+        .insert([{
+            usuario_id: usuario.id,
+            tipo: tipoNome,
+            nome: document.getElementById('nomeCompleto').value,
+            cpf: document.getElementById('cpf').value,
+            iptu: document.getElementById('iptu').value,
+            endereco: document.getElementById('logradouro').value,
+            numero: document.getElementById('numero').value,
+            bairro: document.getElementById('bairro').value,
+            quadra: document.getElementById('quadra').value,
+            lote: document.getElementById('lote').value,
+            status: 'pendente'
+        }]);
+
+    if (!error) {
+        alert("Solicitação enviada com sucesso!");
+        window.location.href = "index.html";
+    } else {
+        alert("Erro ao enviar solicitação.");
+        console.error(error);
+    }
 }
-
-async function enviarSolicitacao(formData, arquivo) {
-
-    const nomeArquivo = Date.now() + "_" + arquivo.name;
-
-    await supabase.storage
-        .from('croquis')
-        .upload(nomeArquivo, arquivo);
-
-    await supabase.from('solicitacoes').insert([{
-        nome: formData.nome,
-        email: formData.email,
-        lote: formData.lote,
-        arquivo: nomeArquivo,
-        status: "pendente"
-    }]);
-
-    alert("Solicitação enviada com sucesso!");
-}
-
-    
-    // Gerar número aleatório para demonstração
-    const numeroDemonstracao = Math.floor(Math.random() * 100) + 1;
-    
-    alert(
-        `Solicitação ${solicitacao.numero} encaminhada ao cadastro municipal!\n\n` +
-        `Número do protocolo: ${numeroDemonstracao}/2026\n` +
-        `Status: Aguardando análise\n\n` +
-        `Você será redirecionado para a página inicial.`
-    );
-    
-    // Redirecionar após 3 segundos
-    setTimeout(() => {
-        window.location.href = 'index.html';
-    }, 3000);
-}
-</script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-
-<script>
-const SUPABASE_URL = "https://SEU_URL.supabase.co";
-const SUPABASE_KEY = "SUA_ANON_KEY";
-
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-document.getElementById("formSolicitar").addEventListener("submit", async (e)=>{
-    e.preventDefault();
-
-    const nome = document.getElementById("nome").value;
-    const email = document.getElementById("email").value;
-    const arquivo = document.getElementById("arquivo").files[0];
-
-    const fileName = Date.now()+"_"+arquivo.name;
-
-    await supabase.storage.from("pdfs").upload(fileName, arquivo);
-
-    const { data } = supabase.storage.from("pdfs").getPublicUrl(fileName);
-
-    await supabase.from("solicitacoes").insert({
-        nome,
-        email,
-        pdf_url: data.publicUrl,
-        status: "PENDENTE"
-    });
 
     alert("Solicitação enviada");
 });
