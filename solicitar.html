@@ -366,34 +366,28 @@ const SUPABASE_KEY = "SUA_ANON_KEY";
 
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-async function carregarSolicitacoes() {
-    const { data, error } = await supabase
-        .from('solicitacoes')
-        .select('*')
-        .order('created_at', { ascending: false });
+document.getElementById("formSolicitar").addEventListener("submit", async (e)=>{
+    e.preventDefault();
 
-    if (error) {
-        console.error(error);
-        return;
-    }
+    const nome = document.getElementById("nome").value;
+    const email = document.getElementById("email").value;
+    const arquivo = document.getElementById("arquivo").files[0];
 
-    const tabela = document.getElementById("tabelaSolicitacoes");
-    if (!tabela) return;
+    const fileName = Date.now()+"_"+arquivo.name;
 
-    tabela.innerHTML = "";
+    await supabase.storage.from("pdfs").upload(fileName, arquivo);
 
-    data.forEach(s => {
-        tabela.innerHTML += `
-        <tr>
-            <td>${s.nome}</td>
-            <td>${s.email}</td>
-            <td>${s.status}</td>
-            <td><a href="${s.pdf_url}" target="_blank">Abrir PDF</a></td>
-        </tr>`;
+    const { data } = supabase.storage.from("pdfs").getPublicUrl(fileName);
+
+    await supabase.from("solicitacoes").insert({
+        nome,
+        email,
+        pdf_url: data.publicUrl,
+        status: "PENDENTE"
     });
-}
 
-window.onload = carregarSolicitacoes;
+    alert("Solicitação enviada");
+});
 </script>
 
 </body>
