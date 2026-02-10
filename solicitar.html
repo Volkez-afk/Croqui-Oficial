@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Solicitar</title>
+<link rel="stylesheet" href="style.css">
+<script src="supabase.js"></script>
+</head>
+
+<body>
+
+<h2>Solicitação de Croqui</h2>
+
+<input id="nome" placeholder="Nome">
+<input id="cpf" placeholder="CPF">
+<input id="endereco" placeholder="Endereço">
+
+<button onclick="enviar()">Enviar</button>
+
+<script>
+
+async function enviar(){
+
+const {data:{user}}=await db.auth.getUser()
+
+const nome=document.getElementById('nome').value
+const cpf=document.getElementById('cpf').value
+const endereco=document.getElementById('endereco').value
+
+await db.from('solicitacoes').insert([
+{usuario:user.id,nome,cpf,endereco,status:'pendente'}
+])
+
+alert("Solicitação enviada")
+
+}
+
+</script>
+
+</body>
+</html>
